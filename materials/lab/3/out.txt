@@ -1,0 +1,217 @@
+1
+45
+
+<h6 data-target="#shodan-host-details" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/{ip}</span>
+</h6>
+<div id="shodan-host-details" class="description">
+<h6><strong>Host Information</strong>
+</h6>
+<p>Returns all services that have been found on the given host IP.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/{ip}?key={YOUR_API_KEY}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>ip: </strong><span>[String] Host IP address</span>
+</li>
+<li><strong>history (optional): </strong><span>[Boolean] True if all historical banners should be returned (default: False)</span>
+</li>
+<li><strong>minify (optional): </strong><span>[Boolean] True to only return the list of ports and the general host information, no banners. (default: False)</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/8.8.8.8?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "region_code": null,
+    "ip": 134744072,
+    "postal_code": null,
+    "country_code": "US",
+    "city": null,
+    "dma_code": null,
+    "last_update": "2021-01-22T08:49:35.190817",
+    "latitude": 37.751,
+    "tags": [],
+    "area_code": null,
+    "country_name": "United States",
+    "hostnames": [
+        "dns.google"
+    ],
+    "org": "Google",
+    "data": [
+        {
+            "_shodan": {
+                "id": "cea5795b-55fd-4595-b9e5-ad5ca847cb4b",
+                "options": {},
+                "ptr": true,
+                "module": "dns-udp",
+                "crawler": "ac284849be0745621b3c518f74c14cf43cafbf08"
+            },
+            "hash": -553166942,
+            "os": null,
+            "opts": {
+                "raw": "34ef818200010000000000000776657273696f6e0462696e640000100003"
+            },
+            "ip": 134744072,
+            "isp": "Google",
+            "port": 53,
+            "hostnames": [
+                "dns.google"
+            ],
+            "location": {
+                "city": null,
+                "region_code": null,
+                "area_code": null,
+                "longitude": -97.822,
+                "country_code3": null,
+                "country_name": "United States",
+                "postal_code": null,
+                "dma_code": null,
+                "country_code": "US",
+                "latitude": 37.751
+            },
+            "dns": {
+                "resolver_hostname": null,
+                "recursive": true,
+                "resolver_id": null,
+                "software": null
+            },
+            "timestamp": "2021-01-22T08:49:35.190817",
+            "domains": [
+                "dns.google"
+            ],
+            "org": "Google",
+            "data": "
+Recursion: enabled",
+            "asn": "AS15169",
+            "transport": "udp",
+            "ip_str": "8.8.8.8"
+        }
+    ],
+    "asn": "AS15169",
+    "isp": "Google",
+    "longitude": -97.822,
+    "country_code3": null,
+    "domains": [
+        "dns.google"
+    ],
+    "ip_str": "8.8.8.8",
+    "os": null,
+    "ports": [
+        53
+    ]
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan host 8.8.8.8
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">8.8.8.8
+Hostnames:               dns.google
+Country:                 United States
+Organization:            Google
+Updated:                 2021-01-22T08:49:35.190817
+Number of open ports:    1
+
+Ports:
+    53/udp</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.host('8.8.8.8'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "area_code": None,
+    "asn": "AS15169",
+    "city": None,
+    "country_code": "US",
+    "country_code3": None,
+    "country_name": "United States",
+    "data": [
+        {
+            "asn": "AS15169",
+            "data": "
+Recursion: enabled",
+            "dns": {
+                "recursive": True,
+                "resolver_hostname": None,
+                "resolver_id": None,
+                "software": None,
+            },
+            "domains": ["dns.google"],
+            "hash": -553166942,
+            "hostnames": ["dns.google"],
+            "ip": 134744072,
+            "ip_str": "8.8.8.8",
+            "isp": "Google",
+            "location": {
+                "area_code": None,
+                "city": None,
+                "country_code": "US",
+                "country_code3": None,
+                "country_name": "United States",
+                "dma_code": None,
+                "latitude": 37.751,
+                "longitude": -97.822,
+                "postal_code": None,
+                "region_code": None,
+            },
+            "opts": {
+                "raw": "34ef818200010000000000000776657273696f6e0462696e640000100003"
+            },
+            "org": "Google",
+            "os": None,
+            "port": 53,
+            "timestamp": "2021-01-22T08:49:35.190817",
+            "transport": "udp",
+        }
+    ],
+    "dma_code": None,
+    "domains": ["dns.google"],
+    "hostnames": ["dns.google"],
+    "ip": 134744072,
+    "ip_str": "8.8.8.8",
+    "isp": "Google",
+    "last_update": "2021-01-22T08:49:35.190817",
+    "latitude": 37.751,
+    "longitude": -97.822,
+    "org": "Google",
+    "os": None,
+    "ports": [53],
+    "postal_code": None,
+    "region_code": None,
+    "tags": [],
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+

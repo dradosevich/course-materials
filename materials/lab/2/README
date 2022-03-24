@@ -1,9 +1,9 @@
 # Lab 2
 Due: Feb 11 2022
 
-1. Update Your Forked Repository
+1. Update Your Forked Repository 
 2. Navigate to > materials > lab > 2
-3. bhg-scanner folder has
+3. bhg-scanner folder has 
    1. main > main.go : in this folder `go build` then `./main`
    2. scanner > scanner.go and scanner_test.go  : in this folder `go test`
 4. Complete the TODO's listed in scanner > scanner.go

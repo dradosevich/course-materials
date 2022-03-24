@@ -1,0 +1,4528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Shodan Developer</title>
+<meta charset="utf-8">
+<meta name="description" content="Complete reference documentation for the Shodan API">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://wire.shodan.io/v2.3.2/default/css/wire.css" rel="stylesheet" />
+<link rel="shortcut icon" href="https://static.shodan.io/shodan/img/favicon.png" type="image/x-icon">
+<link rel="apple-touch-icon" href="https://developer.shodan.io/static/img/apple-touch-icon-192.png">
+<script defer src="https://kit.fontawesome.com/b7e79643d9.js" crossorigin="anonymous"></script>
+<style>#api-key-show,
+#api-key-content {
+    float: right !important;
+    border-right: none !important;
+}
+
+/* Smaller nvd3 chart grid lines */
+.nvd3 .nv-axis line {
+    stroke-width: 0.5px;
+}
+
+/* Medium devices CSS */
+@media (max-width: 900px) {
+    #api-key-content {
+        float: none !important;
+    }
+
+    /* Skip left-right padding for Account menu so Shodan Developer menu not breaks line */
+    ul.right-menu li a {
+        padding: 10px 0px 10px 0px;
+    }
+
+    .welcome .title {
+        top: 70px !important;
+    }
+}
+    </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css" />
+<style>.header {
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 10px;
+}
+
+.request {
+    margin-bottom: 1rem;
+}
+
+.request h6 {
+    margin-bottom: 0rem;
+}
+
+.request .description {
+    padding-top: 1rem;
+    padding-left: 2rem;
+    border-left: 1px solid #e1e1e1;
+}
+
+.request .method:hover {
+    cursor: pointer;
+}
+
+.method .name {
+    width: 57px;
+    float: left;
+    font-weight: bold;
+    text-align: center;
+}
+
+.method .url {
+    display: block;
+    overflow: auto;
+}
+
+.method .name, .url {
+    font-family: monospace;
+    font-size: 1.6rem;
+    padding: 7px;
+}
+
+ul.parameters li {
+    margin-left: 2rem;
+    margin-bottom: 0px;
+    list-style-type: disc;
+}
+
+.parameters .values {
+    margin: 0px;
+}
+
+.values {
+    margin-bottom: 0px;
+}
+
+.values li {
+    margin-left: 2rem;
+    margin-bottom: 0px;
+}
+
+ul.values li {
+    list-style-type: disc;
+}
+
+ol.values li {
+    list-style-type: decimal;
+}
+
+.spec-properties dt {
+    text-align: right;
+}
+
+/* Override .card .column, .card .columns from wire.css */
+.spec-properties .columns {
+    padding: 7px 0px 7px 0px;
+}
+
+.examples .languages {
+    height: 45px;
+}
+
+.examples .languages select {
+    height: auto;
+    padding: 5px;
+    margin-bottom: 0px;
+}
+
+.examples .type {
+    height: 25px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0px;
+    font-family: monospace;
+    font-size: 1.6rem;
+}
+
+/* Skip margin top for element below .type  */
+.examples .type + .prettyprint {
+    margin-top: 0px !important;
+    border: 1px solid #e1e1e1;
+}
+
+.examples .type + .prettyprint code {
+    border: 0px !important;
+}
+
+.examples .type span {
+    /* Same as .type to make span vertically middle align  */
+    line-height: 25px;
+}
+
+.examples .copy-button {
+    cursor: pointer;
+    position: relative;
+    font-size: 1.6rem;
+}
+
+/* Inherited from Bootstrap Tooltip */
+.copy-tooltip {
+    position: absolute;
+    top: -35px;
+    left: -50px;
+    width: 120px;
+    z-index: 1020;
+    display: block;
+    visibility: visible;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    filter: alpha(opacity=80);
+}
+
+.copy-tooltip .arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -5px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #000;
+}
+
+.copy-tooltip .content {
+    padding: .2rem;
+    text-align: center;
+}
+
+/* Override PrismJS CSS */
+.prettyprint {
+    padding: 0px !important;
+    white-space: unset !important;
+    border: 1px solid #e1e1e1;
+}
+
+.prettyprint code {
+    margin: 0px !important;
+    border: 0px !important;
+}
+
+@media (max-width: 900px) {
+    .request .description {
+        padding-left: 1rem;
+    }
+
+    .spec-properties dt {
+        text-align: left;
+    }
+}
+</style>
+</head>
+<body>
+<div class="quickbar">
+<ul>
+<li><a href="https://www.shodan.io">Shodan</a>
+</li>
+<li><a href="https://maps.shodan.io">Maps</a>
+</li>
+<li><a href="https://images.shodan.io">Images</a>
+</li>
+<li><a href="https://monitor.shodan.io">Monitor</a>
+</li>
+<li><a href="https://www.shodan.io/about/products">More...</a>
+</li>
+</ul>
+</div>
+<div class="container u-full-width">
+<div class="row">
+<div class="twelve columns">
+<div class="navbar">
+<input id="menu-btn" type="checkbox" class="menu-btn" />
+<label for="menu-btn" class="menu-icon"><span class="navicon"><i class="fa fa-bars  fa-fw "></i></span>
+</label><a href="/" class="title"><img src="https://static.shodan.io/shodan-ds/img/logo.png" alt="Shodan" /><span>Developer</span></a>
+<ul class="menu sub-menu">
+<li><a href="/api"><i class="fas fa-book  fa-fw "></i>API Reference</a>
+</li>
+<li><a href="/apps"><i class="fas fa-cogs  fa-fw "></i>Integrations</a>
+</li>
+<li><a href="https://account.shodan.io/billing" target="_blank" rel="noopener noreferrer"><i class="fas fa-briefcase  fa-fw "></i>Pricing&nbsp;
+<i style="font-size: 1.1rem" class="fa fa-external-link   "></i></a>
+</li>
+</ul>
+<form></form>
+<ul class="menu main-menu right-menu">
+<li><a href="https://account.shodan.io/login" class="highlight-success">Login</a>
+</li>
+</ul>
+</div>
+<div class="u-cf"></div>
+</div>
+</div>
+<main><br><br>
+<div class="container">
+<div class="row">
+<div class="twelve columns">
+<h3 class="heading-highlight"><span>API Reference</span>
+</h3>
+</div>
+</div>
+<div class="row">
+<div class="four columns">
+<div class="section card card-padding card-orange">
+<h1><em>API </em>Documentation
+</h1>
+<ol>
+<li><a href="https://developer.shodan.io/api/requirements">Requirements</a>
+</li>
+<li><a href="https://developer.shodan.io/api/introduction">Introduction</a>
+</li>
+<li><a href="https://developer.shodan.io/api/clients">Clients</a>
+</li>
+<li><a href="https://developer.shodan.io/api">REST API Documentation</a>
+</li>
+<li><a href="https://developer.shodan.io/api/stream">Streaming API Documentation</a>
+</li>
+</ol>
+</div>
+<div class="section card card-padding card-purple">
+<h1><em>Appendix</em>
+</h1>
+<ol>
+<li><a href="https://datapedia.shodan.io">Banner Specification</a>
+</li>
+<li><a href="https://www.shodan.io/search/filters">Search Filters</a>
+</li>
+</ol>
+</div><br />
+</div>
+<div class="eight columns">
+<div class="card card-padding">
+<h5 class="header">REST API Documentation</h5><span>The base URL for all of these methods is:</span>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io</code>
+  </pre>
+</div>
+<div class="card card-padding">
+<h1><em>Search</em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#shodan-host-details" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/{ip}</span>
+</h6>
+<div id="shodan-host-details" class="description">
+<h6><strong>Host Information</strong>
+</h6>
+<p>Returns all services that have been found on the given host IP.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/{ip}?key={YOUR_API_KEY}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>ip: </strong><span>[String] Host IP address</span>
+</li>
+<li><strong>history (optional): </strong><span>[Boolean] True if all historical banners should be returned (default: False)</span>
+</li>
+<li><strong>minify (optional): </strong><span>[Boolean] True to only return the list of ports and the general host information, no banners. (default: False)</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/8.8.8.8?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "region_code": null,
+    "ip": 134744072,
+    "postal_code": null,
+    "country_code": "US",
+    "city": null,
+    "dma_code": null,
+    "last_update": "2021-01-22T08:49:35.190817",
+    "latitude": 37.751,
+    "tags": [],
+    "area_code": null,
+    "country_name": "United States",
+    "hostnames": [
+        "dns.google"
+    ],
+    "org": "Google",
+    "data": [
+        {
+            "_shodan": {
+                "id": "cea5795b-55fd-4595-b9e5-ad5ca847cb4b",
+                "options": {},
+                "ptr": true,
+                "module": "dns-udp",
+                "crawler": "ac284849be0745621b3c518f74c14cf43cafbf08"
+            },
+            "hash": -553166942,
+            "os": null,
+            "opts": {
+                "raw": "34ef818200010000000000000776657273696f6e0462696e640000100003"
+            },
+            "ip": 134744072,
+            "isp": "Google",
+            "port": 53,
+            "hostnames": [
+                "dns.google"
+            ],
+            "location": {
+                "city": null,
+                "region_code": null,
+                "area_code": null,
+                "longitude": -97.822,
+                "country_code3": null,
+                "country_name": "United States",
+                "postal_code": null,
+                "dma_code": null,
+                "country_code": "US",
+                "latitude": 37.751
+            },
+            "dns": {
+                "resolver_hostname": null,
+                "recursive": true,
+                "resolver_id": null,
+                "software": null
+            },
+            "timestamp": "2021-01-22T08:49:35.190817",
+            "domains": [
+                "dns.google"
+            ],
+            "org": "Google",
+            "data": "\nRecursion: enabled",
+            "asn": "AS15169",
+            "transport": "udp",
+            "ip_str": "8.8.8.8"
+        }
+    ],
+    "asn": "AS15169",
+    "isp": "Google",
+    "longitude": -97.822,
+    "country_code3": null,
+    "domains": [
+        "dns.google"
+    ],
+    "ip_str": "8.8.8.8",
+    "os": null,
+    "ports": [
+        53
+    ]
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan host 8.8.8.8
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">8.8.8.8
+Hostnames:               dns.google
+Country:                 United States
+Organization:            Google
+Updated:                 2021-01-22T08:49:35.190817
+Number of open ports:    1
+
+Ports:
+    53/udp</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.host('8.8.8.8'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "area_code": None,
+    "asn": "AS15169",
+    "city": None,
+    "country_code": "US",
+    "country_code3": None,
+    "country_name": "United States",
+    "data": [
+        {
+            "asn": "AS15169",
+            "data": "\nRecursion: enabled",
+            "dns": {
+                "recursive": True,
+                "resolver_hostname": None,
+                "resolver_id": None,
+                "software": None,
+            },
+            "domains": ["dns.google"],
+            "hash": -553166942,
+            "hostnames": ["dns.google"],
+            "ip": 134744072,
+            "ip_str": "8.8.8.8",
+            "isp": "Google",
+            "location": {
+                "area_code": None,
+                "city": None,
+                "country_code": "US",
+                "country_code3": None,
+                "country_name": "United States",
+                "dma_code": None,
+                "latitude": 37.751,
+                "longitude": -97.822,
+                "postal_code": None,
+                "region_code": None,
+            },
+            "opts": {
+                "raw": "34ef818200010000000000000776657273696f6e0462696e640000100003"
+            },
+            "org": "Google",
+            "os": None,
+            "port": 53,
+            "timestamp": "2021-01-22T08:49:35.190817",
+            "transport": "udp",
+        }
+    ],
+    "dma_code": None,
+    "domains": ["dns.google"],
+    "hostnames": ["dns.google"],
+    "ip": 134744072,
+    "ip_str": "8.8.8.8",
+    "isp": "Google",
+    "last_update": "2021-01-22T08:49:35.190817",
+    "latitude": 37.751,
+    "longitude": -97.822,
+    "org": "Google",
+    "os": None,
+    "ports": [53],
+    "postal_code": None,
+    "region_code": None,
+    "tags": [],
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-host-count" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/count</span>
+</h6>
+<div id="shodan-host-count" class="description">
+<h6><strong>Search Shodan without Results</strong>
+</h6>
+<p>This method behaves identical to "/shodan/host/search" with the only difference that this method does not return any host results, it only returns the total number of results that matched the query and any facet information that was requested. As a result this method does not consume query credits.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/count?key={YOUR_API_KEY}&query={query}&facets={facets}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>query: </strong><span>[String] Shodan search query. The provided string is used to search the database of banners in Shodan, with the additional option to provide filters inside the search query using a "filter:value" format. For example, the following search query would find Apache Web servers located in Germany: "apache country:DE".</span><br /><a href="https://beta.shodan.io/search/filters" class="button button-blue">List of Filters</a>
+</li>
+<li><strong>facets (optional): </strong><span>[String] A comma-separated list of properties to get summary information on. Property names can also be in the format of "property:count", where "count" is the number of facets that will be returned for a property (i.e. "country:100" to get the top 100 countries for a search query). Visit the Shodan website's Facet Analysis page for an up-to-date list of available facets:</span><br /><a href="https://beta.shodan.io/search/facet" class="button button-blue">Explore Facets</a>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/count?key={YOUR_API_KEY}&query=port:22&facets=org,os"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [],
+    "facets": {
+        "org": [
+            {
+                "count": 3012386,
+                "value": "Amazon.com"
+            },
+            {
+                "count": 1322102,
+                "value": "Google Cloud"
+            },
+            {
+                "count": 1075807,
+                "value": "Digital Ocean"
+            },
+            {
+                "count": 687155,
+                "value": "OVH SAS"
+            },
+            {
+                "count": 450521,
+                "value": "Tencent cloud computing"
+            }
+        ],
+        "os": [
+            {
+                "count": 601923,
+                "value": "Ubuntu"
+            },
+            {
+                "count": 227851,
+                "value": "Debian"
+            },
+            {
+                "count": 7660,
+                "value": "Raspbian"
+            }
+        ]
+    },
+    "total": 19590274
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan count port:22
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">19591483
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.count(query='port:22', facets='org,os'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [],
+    "total": 19592093
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-host-search" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/search</span>
+</h6>
+<div id="shodan-host-search" class="description">
+<h6><strong>Search Shodan</strong>
+</h6>
+<p>Search Shodan using the same query syntax as the website and use facets to get summary information for different properties.</p>
+<h6><strong>Requirements</strong>
+</h6>
+<p>This method may use API query credits depending on usage. If any of the following criteria are met, your account will be deducted 1 query credit:</p>
+<ol class="values">
+<li>The search query contains a filter.</li>
+<li>Accessing results past the 1st page using the "page". For every 100 results past the 1st page 1 query credit is deducted.</li>
+</ol><br />
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/search?key={YOUR_API_KEY}&query={query}&facets={facets}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>query: </strong><span>[String] Shodan search query. The provided string is used to search the database of banners in Shodan, with the additional option to provide filters inside the search query using a "filter:value" format. For example, the following search query would find Apache Web servers located in Germany: "apache country:DE".</span><br /><a href="https://beta.shodan.io/search/filters" class="button button-blue">List of Filters</a>
+</li>
+<li><strong>facets (optional): </strong><span>[String] A comma-separated list of properties to get summary information on. Property names can also be in the format of "property:count", where "count" is the number of facets that will be returned for a property (i.e. "country:100" to get the top 100 countries for a search query). Visit the Shodan website's Facet Analysis page for an up-to-date list of available facets:</span><br /><a href="https://beta.shodan.io/search/facet" class="button button-blue">Explore Facets</a>
+</li>
+<li><strong>page (optional): </strong><span>[Integer] The page number to page through results 100 at a time (default: 1)</span>
+</li>
+<li><strong>minify (optional): </strong><span>[Boolean] True or False; whether or not to truncate some of the larger fields (default: True)</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/search?key={YOUR_API_KEY}&query=product:nginx&facets=country"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "product": "nginx",
+            "hash": -1609083510,
+            "ip": 1616761883,
+            "org": "Comcast Business",
+            "isp": "Comcast Business",
+            "transport": "tcp",
+            "cpe": [
+                "cpe:/a:igor_sysoev:nginx"
+            ],
+            "data": "HTTP/1.1 400 Bad Request\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:48 GMT\r\nContent-Type: text/html\r\nContent-Length: 650\r\nConnection: close\r\n\r\n",
+            "asn": "AS7922",
+            "port": 443,
+            "hostnames": [
+                "three.webapplify.net"
+            ],
+            "location": {
+                "city": "Denver",
+                "region_code": "CO",
+                "area_code": null,
+                "longitude": -104.9078,
+                "country_code3": null,
+                "latitude": 39.7301,
+                "postal_code": null,
+                "dma_code": 751,
+                "country_code": "US",
+                "country_name": "United States"
+            },
+            "timestamp": "2021-01-25T21:33:49.154513",
+            "domains": [
+                "webapplify.net"
+            ],
+            "http": {
+                "robots_hash": null,
+                "redirects": [],
+                "securitytxt": null,
+                "title": "400 The plain HTTP request was sent to HTTPS port",
+                "sitemap_hash": null,
+                "robots": null,
+                "server": "nginx",
+                "host": "96.93.212.27",
+                "html": "<html>\r\n<head><title>400 The plain HTTP request was sent to HTTPS port</title></head>\r\n<body>\r\n<center><h1>400 Bad Request</h1></center>\r\n<center>The plain HTTP request was sent to HTTPS port</center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n\r\n\r\n\r\n\r\n\r\n\r\n",
+                "location": "/",
+                "components": {},
+                "securitytxt_hash": null,
+                "sitemap": null,
+                "html_hash": 199333125
+            },
+            "os": null,
+            "_shodan": {
+                "crawler": "c9b639b99e5410a46f656e1508a68f1e6e5d6f99",
+                "ptr": true,
+                "id": "534cc127-e734-44bc-be88-2e219a56a099",
+                "module": "auto",
+                "options": {}
+            },
+            "ip_str": "96.93.212.27"
+        },
+        {
+            "product": "nginx",
+            "hostnames": [
+                "kolobok.us"
+            ],
+            "hash": 1940048442,
+            "ip": 3104568883,
+            "org": "RuWeb",
+            "isp": "RuWeb",
+            "transport": "tcp",
+            "cpe": [
+                "cpe:/a:igor_sysoev:nginx:1.4.2"
+            ],
+            "data": "HTTP/1.1 410 Gone\r\nServer: nginx/1.4.2\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Type: text/html; charset=iso-8859-1\r\nContent-Length: 295\r\nConnection: keep-alive\r\n\r\n",
+            "asn": "AS49189",
+            "port": 80,
+            "version": "1.4.2",
+            "location": {
+                "city": null,
+                "region_code": null,
+                "area_code": null,
+                "longitude": 37.6068,
+                "country_code3": null,
+                "latitude": 55.7386,
+                "postal_code": null,
+                "dma_code": null,
+                "country_code": "RU",
+                "country_name": "Russia"
+            },
+            "timestamp": "2021-01-25T21:33:51.172037",
+            "domains": [
+                "kolobok.us"
+            ],
+            "http": {
+                "robots_hash": null,
+                "redirects": [],
+                "securitytxt": null,
+                "title": "410 Gone",
+                "sitemap_hash": null,
+                "robots": null,
+                "server": "nginx/1.4.2",
+                "host": "185.11.246.51",
+                "html": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>410 Gone</title>\n</head><body>\n<h1>Gone</h1>\n<p>The requested resource<br />/<br />\nis no longer available on this server and there is no forwarding address.\nPlease remove all references to this resource.</p>\n</body></html>\n",
+                "location": "/",
+                "components": {},
+                "securitytxt_hash": null,
+                "sitemap": null,
+                "html_hash": 922034037
+            },
+            "os": null,
+            "_shodan": {
+                "crawler": "c9b639b99e5410a46f656e1508a68f1e6e5d6f99",
+                "ptr": true,
+                "id": "118b7360-01d0-4edb-8ee9-01e411c23e60",
+                "module": "auto",
+                "options": {}
+            },
+            "ip_str": "185.11.246.51"
+        },
+        ...
+    ],
+    "facets": {
+        "country": [
+            {
+                "count": 7883733,
+                "value": "US"
+            },
+            {
+                "count": 2964965,
+                "value": "CN"
+            },
+            {
+                "count": 1945369,
+                "value": "DE"
+            },
+            {
+                "count": 1717359,
+                "value": "HK"
+            },
+            {
+                "count": 940900,
+                "value": "FR"
+            }
+        ]
+    },
+    "total": 23047224
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan search product:nginx
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">54.175.207.100  80      ec2-54-175-207-100.compute-1.amazonaws.com      HTTP/1.1 404 Not Found\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Type: text/html\r\nContent-Length: 970\r\nETag: "5cda3f8a-3ca"\r\nCache-Control: max-age=900, public\r\nAge: 0\r\nVia: varnish\r\nX-Cache: MISS\r\nConnection: keep-alive\r\n\r\n
+95.110.255.139  80      ru001353.arubabiz.net   HTTP/1.1 200 OK\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:49 GMT\r\nContent-Type: text/html\r\nContent-Length: 4033\r\nConnection: keep-alive\r\nLast-Modified: Wed, 19 Feb 2020 08:11:56 GMT\r\nETag: "fc1-59ee957802682"\r\nAccept-Ranges: bytes\r\n\r\n
+18.167.41.130   9999    ec2-18-167-41-130.ap-east-1.compute.amazonaws.com       HTTP/1.1 404 Not Found\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Length: 0\r\n\r\n
+185.11.246.51   80      kolobok.us      HTTP/1.1 410 Gone\r\nServer: nginx/1.4.2\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Type: text/html; charset=iso-8859-1\r\nContent-Length: 295\r\nConnection: keep-alive\r\n\r\n
+97.64.28.162    443     97.64.28.162.16clouds.com       HTTP/1.1 400 Bad Request\r\nServer: nginx/1.18.0\r\nDate: Mon, 25 Jan 2021 21:33:52 GMT\r\nContent-Type: text/html\r\nContent-Length: 255\r\nConnection: close\r\n\r\n<html>\r\n<head><title>400 The plain HTTP request was sent to HTTPS port</title></head>\r\n<body>\r\n<center><h1>400 Bad Request</h1></center>\r\n<center>The plain HTTP request was sent to HTTPS port</center>\r\n<hr><center>nginx/1.18.0</center>\r\n</body>\r\n</html>\r\n
+52.203.117.10   443     ec2-52-203-117-10.compute-1.amazonaws.com       HTTP/1.1 400 Bad Request\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Type: text/html\r\nContent-Length: 650\r\nConnection: close\r\n\r\n</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.search(query='product:nginx', facets='country,org'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "product": "nginx",
+            "hash": 1320103325,
+            "ip": 2574807568,
+            "org": "SAKURA Internet",
+            "isp": "SAKURA Internet",
+            "transport": "tcp",
+            "cpe": ["cpe:/a:igor_sysoev:nginx"],
+            "data": "HTTP/1.1 403 Forbidden\r\nServer: nginx\r\nDate: Mon, 25 Jan 2021 21:33:50 GMT\r\nContent-Type: text/html\r\nTransfer-Encoding: chunked\r\nConnection: keep-alive\r\n\r\n",
+            "asn": "AS7684",
+            "port": 80,
+            "hostnames": ["www7616m.sakura.ne.jp"],
+            "location": {
+                "city": None,
+                "region_code": None,
+                "area_code": None,
+                "longitude": 139.6895,
+                "country_code3": None,
+                "latitude": 35.6897,
+                "postal_code": None,
+                "dma_code": None,
+                "country_code": "JP",
+                "country_name": "Japan",
+            },
+            "timestamp": "2021-01-25T21:33:51.305797",
+            "domains": ["sakura.ne.jp"],
+            "http": {
+                "robots_hash": None,
+                "redirects": [],
+                "securitytxt": None,
+                "title": "������̃}�l�[�W�h�T�[�o",
+                "sitemap_hash": None,
+                "robots": None,
+                "server": "nginx",
+                "host": "153.120.114.16",
+                "html": '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">...',
+                "location": "/",
+                "components": {},
+                "securitytxt_hash": None,
+                "sitemap": None,
+                "html_hash": 1520306793,
+            },
+            "os": None,
+            "_shodan": {
+                "crawler": "c9b639b99e5410a46f656e1508a68f1e6e5d6f99",
+                "ptr": True,
+                "id": "44a3d53b-f109-4240-ab90-842a96a7c7c1",
+                "module": "auto",
+                "options": {},
+            },
+            "ip_str": "153.120.114.16",
+        },
+        {
+            "product": "nginx",
+            "hostnames": ["97.64.28.162.16clouds.com"],
+            "hash": 372879924,
+            "ip": 1631591586,
+            "isp": "IT7 Networks",
+            "transport": "tcp",
+            "cpe": ["cpe:/a:igor_sysoev:nginx:1.18.0"],
+            "data": "HTTP/1.1 400 Bad Request\r\nServer: nginx/1.18.0\r\nDate: Mon, 25 Jan 2021 21:33:52 GMT\r\nContent-Type: text/html\r\nContent-Length: 255\r\nConnection: close\r\n\r\n<html>\r\n<head><title>400 The plain HTTP request was sent to HTTPS port</title></head>\r\n<body>\r\n<center><h1>400 Bad Request</h1></center>\r\n<center>The plain HTTP request was sent to HTTPS port</center>\r\n<hr><center>nginx/1.18.0</center>\r\n</body>\r\n</html>\r\n",
+            "asn": "AS25820",
+            "port": 443,
+            "version": "1.18.0",
+            "location": {
+                "city": "Los Angeles",
+                "region_code": "CA",
+                "area_code": None,
+                "longitude": -118.278,
+                "country_code3": None,
+                "latitude": 34.0584,
+                "postal_code": None,
+                "dma_code": 803,
+                "country_code": "US",
+                "country_name": "United States",
+            },
+            "timestamp": "2021-01-25T21:33:52.845325",
+            "domains": ["16clouds.com"],
+            "org": "IT7 Networks",
+            "os": None,
+            "_shodan": {
+                "crawler": "9d8ac08f91f51fa9017965712c8fdabb4211dee4",
+                "ptr": True,
+                "id": "256e7517-86cf-480a-8e47-20e6b968aa8c",
+                "module": "https",
+                "options": {},
+            },
+            "ip_str": "97.64.28.162",
+        },
+        ...
+    ],
+    "total": 23047224,
+    "_scroll_id": "FGluY2x1ZGVfY29udGV4dF91dWlkDnF1ZXJ5VGhlbkZldGNoGRR3dVBiUEhjQlRudmtkS1k4VEpoTwAAAAAFDJQWFndYWjhPWF9oUnptaXNyQXFMV0puRUEUcW5MYlBIY0J2alBvMmt0c1RHUlAAAAAABP0gwxZXQ05uZ3VNZlFncWZfQXJWNFlsSEp3FEdhRGJQSGNCczVJVVF0X2tUTlZQAAAAAAULIL4WU2Jxc1YxVFFTSC1raXp4Vld0RkJfURR2aERiUEhjQkVQLVFWWGoxVE9CUAAAAAAE8vXaFlR6dFlDZWw1UU5XU250dTdHN3pORWcUREQ3YlBIY0IxaC0taGRIM1RCSlAAAAAABRm3uhZFcGstLXJKNVM2ZTJwT1UzcTNscVR3FDZpUGJQSGNCeE1ob1J5bkFUQjlQAAAAAAUZtUcWM2VWcUVoQWRSX1cxVkpNZmhKcXNEdxRmWkhiUEhjQlZHelRsbHYxVEF4UAAAAAAFF6HCFmt4aUpHOVc5UW11ZXJuZkNBaUtfRkEUYUhmYlBIY0JXYXI4eEdhaVRLNVEAAAAABQ4w4RZEWkFHZ01BNFRRLXhJMU45Q2tFWnpBFHotX2JQSGNCcnB0djhtLWNUSzVQAAAAAAUJICYWMXY2bGlVQXBRQU9BLUxYRWRNREF0dxRiYW5iUEhjQnp3QUlobVhUVEF4UAAAAAAFDvKgFm42Ql95STRWVERhTURjaW1WVlpXTVEUaFdUYlBIY0JKeXlPX19xeVRCeFAAAAAABRAdPBZINU40Z0Q2RlF1YWNDN1dNVG1xSTNBFDQ5dmJQSGNCOFhMZnR2U1lUSGhQAAAAAAT2L8EWWnFuOF9zcVJUOW1Kdm1pVWVaT3pmZxRVbW5iUEhjQmkzY1VsRUtXVEYxUAAAAAAE77duFm9pcmtqZ1B2Uk9HV2xFRHBOR2djZkEUaURuYlBIY0I0M2NjakpjNVROaFEAAAAABPoImxZob3hMV19XM1RUUzhEQW12TlR5Wl9RFE9IM2JQSGNCcW1TOVBxS3FUSzFRAAAAAAUJ9tIWclJCSzdrbkZROXlvQ0ZlUnJVeHVBdxRoODNiUEhjQlI3REkzOTNIVEN4UQAAAAAFDG0RFmZBX3lGTGRrVERHX2loVEE2cmFQd1EUdGt6YlBIY0JDSjZ1ai1IT1RFOVEAAAAABP9oABZwZWNYdF9xaVNXLUNrY3dUZFlBQUpnFC1SX2JQSGNCQlZyUkdXTkFURlJRAAAAAAUEFkAWLVVVYTVOMTZTLW1uRHROdHZfcmNKQRRQSzdiUEhjQnBLY1AxVjdLVEtGTQAAAAAFBTEzFmdwRktZYVIyU2U2OWp1aS1oWGYyYncUNF96YlBIY0JBblNzOUlVMVRDWlEAAAAABQQJEBY4TDAzcmRUa1NfLU1OX2ZvbC1GVFBnFEhucmJQSGNCV3U3THNsTjVUTlJRAAAAAAUmtAgWdHFzbjZ3eGZRQU92NTdocVk2WElVURR2c2piUEhjQnhTTkYyZWxHVEpGUAAAAAAFEgVFFkhpV2p2UnRUUkotQUZCMExVbWVFSGcUdUxYYlBIY0JlcEtCYVVLWFRQZFEAAAAABPzWHBZadmRzTFRQTVF6Q0Y1SFZpbXZFN0JRFENYamJQSGNCVHRKS2NZS0ZUUE5RAAAAAAUHUN0WNVViTThLeTJSMlNnSG5oT0U4SlVZZxQ4VDNiUEhjQnRZamZFaE9YVEx4TQAAAAAFCe3tFkQ0dWxzT05BUVlpZnNsTTVkRWNRSGc=",
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-facets" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/search/facets</span>
+</h6>
+<div id="shodan-facets" class="description">
+<h6><strong>List all search facets</strong>
+</h6>
+<p>This method returns a list of facets that can be used to get a breakdown of the top values for a property.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/search/facets?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/search/facets?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    'asn',
+    'bitcoin.ip',
+    'bitcoin.ip_count',
+    ...
+]</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.search_facets())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    "asn",
+    "bitcoin.ip",
+    "bitcoin.ip_count",
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-filters" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/search/filters</span>
+</h6>
+<div id="shodan-filters" class="description">
+<h6><strong>List all filters that can be used when searching</strong>
+</h6>
+<p>This method returns a list of search filters that can be used in the search query.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/search/filters?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/search/filters?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    "all",
+    "asn",
+    "bitcoin.ip",
+    "bitcoin.ip_count",
+    ...
+]</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.search_filters())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    "all",
+    "asn",
+    "bitcoin.ip",
+    "bitcoin.ip_count",
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-host-search-tokens" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/host/search/tokens</span>
+</h6>
+<div id="shodan-host-search-tokens" class="description">
+<h6><strong>Break the search query into tokens</strong>
+</h6>
+<p>This method lets you determine which filters are being used by the query string and what parameters were provided to the filters.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/host/search/tokens?key={YOUR_API_KEY}&query={query}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>query: </strong><span>[String] Shodan search query. The provided string is used to search the database of banners in Shodan, with the additional option to provide filters inside the search query using a "filter:value" format. For example, the following search query would find Apache Web servers located in Germany: "apache country:DE".</span><br /><a href="https://beta.shodan.io/search/filters" class="button button-blue">List of Filters</a>
+</li>
+</ul><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/host/search/tokens?key={YOUR_API_KEY}&query=Raspbian port:22"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "attributes": {
+        "ports": [22]
+    },
+    "errors": [],
+    "string": "Raspbian",
+    "filters": ["port"],
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.search_tokens(query='Raspbian port:22'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "attributes": {
+        "ports": [22]
+    },
+    "errors": [],
+    "string": "Raspbian",
+    "filters": ["port"],
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1>On-Demand <em>Scanning</em>
+</h1>
+<div class="request">
+<h6 data-target="#shodan-ports" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/ports</span>
+</h6>
+<div id="shodan-ports" class="description">
+<h6><strong>List all ports that Shodan is crawling on the Internet.</strong>
+</h6>
+<p>This method returns a list of port numbers that the crawlers are looking for.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/ports?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/ports?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    7,
+    11,
+    13,
+    15,
+    ...
+]</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.ports())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    7,
+    11,
+    13,
+    15,
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-protocols" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/protocols</span>
+</h6>
+<div id="shodan-protocols" class="description">
+<h6><strong>List all protocols that can be used when performing on-demand Internet scans via Shodan.</strong>
+</h6>
+<p>This method returns an object containing all the protocols that can be used when launching an Internet scan.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/protocols?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/protocols?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "afp": "AFP server information grabbing module",
+    "ajp": "Check whether the Tomcat server running AJP protocol",
+    "amqp": "Grab information from an AMQP service",
+    ...
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.protocols())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "afp": "AFP server information grabbing module",
+    "ajp": "Check whether the Tomcat server running AJP protocol",
+    "amqp": "Grab information from an AMQP service",
+    ...
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-scan" class="method"><span class="name bg-info">POST</span><span class="url bg-dark">/shodan/scan</span>
+</h6>
+<div id="shodan-scan" class="description">
+<h6><strong>Request Shodan to crawl an IP/ netblock</strong>
+</h6>
+<p>Use this method to request Shodan to crawl a network.</p>
+<h6><strong>Requirements</strong>
+</h6>
+<p>This method uses API scan credits: 1 IP consumes 1 scan credit. You must have a paid API plan (either one-time payment or subscription) in order to use this method.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/scan?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>ips: </strong><span>[String] A comma-separated list of IPs or netblocks (in CIDR notation) that should get crawled.</span>
+</li>
+<li><strong>service: </strong><span>[Array] A list of services that should get scanned, where a service is defined as a [port, protocol].</span>
+</li>
+</ul>
+<h6><strong>Here is the JSON encoded object example (which allow to pass service variable to specify [port, protocol])</strong>
+</h6>
+<pre class="prettyprint"><code class="language-json">{
+    "ips": {
+        "{ips}": [
+            {service},
+            {service},
+            ...
+        ],
+        ...
+    }
+}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request (Scan all the services)</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/shodan/scan?key={YOUR_API_KEY}" -d 'ips=8.8.8.8,1.1.1.1'
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "count": 2,
+    "id": "vwWO7P5N1rWF5jbh",
+    "credits_left": 100000
+}</code>
+          </pre>
+<div class="type bg-secondary"><span>Request (Scan specified services)</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/shodan/scan?key={YOUR_API_KEY}" -d 'ips={
+    "1.1.1.1": [
+        [53, "dns-udp"],
+        [443, "https"]
+    ]
+}'</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "count": 1,
+    "id": "z1ojEJbI0gy4AqSx",
+    "credits_left": 100000
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request (Scan all the opened ports)</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan scan submit 8.8.8.8 1.1.1.1
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Starting Shodan scan at 2021-01-26 15:58 - 100000 scan credits left
+
+1.1.1.1 (one.one.one.one)
+Country                  Australia
+Organization             Mountain View Communications
+
+Open Ports:
+    53/udp
+    80/tcp
+    443/tcp
+    |-- SSL Versions: TLSv1, TLSv1.1, TLSv1.2, TLSv1.3
+
+8.8.8.8 (dns.google)
+Country                  United States
+Organization             Google
+
+Open Ports:
+    53/tcp
+    443/tcp
+    |-- SSL Versions: TLSv1.2, TLSv1.3</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request (Scan all the services)</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.scan(ips='8.8.8.8', force=False))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "count": 1,
+    "id": "mFN8rs9pcqcmQYOZ",
+    "credits_left": 100000
+}</code>
+          </pre>
+<div class="type bg-secondary"><span>Request (Scan specified services)</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+ips = {
+    "1.1.1.1": [
+        [53, "dns-udp"],
+        [443, "https"]
+    ],
+    "8.8.8.8": [
+        [53, "dns-tcp"],
+    ],
+}
+print(api.scan(ips=ips, force=False))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response </span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "count": 2,
+    "id": "SDniHKzc4kEWxZPu",
+    "credits_left": 100000
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-scan-internet" class="method"><span class="name bg-info">POST</span><span class="url bg-dark">/shodan/scan/internet</span>
+</h6>
+<div id="shodan-scan-internet" class="description">
+<h6><strong>Crawl the Internet for a specific port and protocol using Shodan</strong>
+</h6>
+<p>Use this method to request Shodan to crawl the Internet for a specific port.</p>
+<h6><strong>Requirements</strong>
+</h6>
+<p>This method is restricted to security researchers and companies with a Shodan Enterprise Data license. To apply for access to this method as a researcher, please email <a href="mailto:jmath@shodan.io">jmath@shodan.io </a>with information about your project. Access is restricted to prevent abuse.
+</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/scan/internet?key={YOUR_API_KEY}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>port: </strong><span>[Integer] The port that Shodan should crawl the Internet for.</span>
+</li>
+<li><strong>protocol: </strong><span>[String] The name of the protocol that should be used to interrogate the port. See /shodan/protocols for a list of supported protocols.</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/shodan/scan/internet?key={YOUR_API_KEY}" -d 'port=80' -d 'protocol=http'
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "id": "TcjcsMfPcw4o7O84"
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan scan internet 22 ssh
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Submitting Internet scan to Shodan...Done
+The requested port is already indexed by Shodan. A new scan for the port has been launched, please subscribe to the real-time stream for results.</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.scan_internet(port=443, protocol='https'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "id": "2kReKZlPxSkCRppx"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-scan-list" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/scans</span>
+</h6>
+<div id="shodan-scan-list" class="description">
+<h6><strong>Get list of all the created scans</strong>
+</h6>
+<p>Returns a listing of all the on-demand scans that are currently active on the account.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/scans?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/scans?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "status": "PROCESSING",
+            "created": "2021-01-26T08:17:43.794000",
+            "status_check": "2021-01-26T08:17:43.900000",
+            "credits_left": 100000,
+            "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+            "id": "Mo8W7itcWumiy9Ay",
+            "size": 1
+        },
+        {
+            "status": "DONE",
+            "created": "2021-01-26T08:08:26.296000",
+            "status_check": "2021-01-26T08:09:39.636000",
+            "credits_left": 100000,
+            "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+            "id": "04GjMnUkQx9HsFhA",
+            "size": 1
+        },
+        ...
+    ],
+    "total": 19
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan scan list
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup"># 19 Scans Total - Showing 10 most recent scans:
+# Scan ID              Status          Size       Timestamp
+vClAi1jq1FjNWmS0       PROCESSING      1          2021-01-26T09:45:21.426000
+xHyH8Q8Do7S0KrkW       DONE            2          2021-01-26T08:58:00.418000
+...</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.scans(page=1))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "status": "PROCESSING",
+            "created": "2021-01-26T08:17:43.794000",
+            "status_check": "2021-01-26T08:17:43.900000",
+            "credits_left": 100000,
+            "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+            "id": "Mo8W7itcWumiy9Ay",
+            "size": 1
+        },
+        {
+            "status": "DONE",
+            "created": "2021-01-26T08:08:26.296000",
+            "status_check": "2021-01-26T08:09:39.636000",
+            "credits_left": 100000,
+            "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+            "id": "04GjMnUkQx9HsFhA",
+            "size": 1
+        },
+        ...
+    ],
+    "total": 19
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-scan-status" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/scan/{id}</span>
+</h6>
+<div id="shodan-scan-status" class="description">
+<h6><strong>Get the status of a scan request</strong>
+</h6><span>Check the progress of a previously submitted scan request. Possible values for the status are:</span>
+<ul class="values">
+<li>SUBMITTING</li>
+<li>QUEUE</li>
+<li>PROCESSING</li>
+<li>DONE</li>
+</ul><br />
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/scan/{id}?key={YOUR_API_KEY}</code>
+      </pre><br />
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] The unique scan ID that was returned by /shodan/scan.</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/scan/Mo8W7itcWumiy9Ay?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "count": 1,
+    "status": "DONE",
+    "id": "Mo8W7itcWumiy9Ay",
+    "created": "2021-01-26T08:17:43.794000"
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan scan status Mo8W7itcWumiy9Ay
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">DONE
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.scan_status(scan_id='Mo8W7itcWumiy9Ay'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "count": 1,
+    "status": "DONE",
+    "id": "Mo8W7itcWumiy9Ay",
+    "created": "2021-01-26T08:17:43.794000"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1>Network <em>Alerts</em>
+</h1>
+<div class="request">
+<h6 data-target="#shodan-alert-create" class="method"><span class="name bg-info">POST</span><span class="url bg-dark">/shodan/alert</span>
+</h6>
+<div id="shodan-alert-create" class="description">
+<h6><strong>Create an alert to monitor a network range</strong>
+</h6>
+<p>Use this method to create a network alert for a defined IP/ netblock which can be used to subscribe to changes/ events that are discovered within that range.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<p>The alert is created by sending a JSON encoded object that has the structure:</p>
+<pre class="prettyprint"><code class="language-json">{
+    "name": {name},
+    "filters": {
+        "ip": {ip},
+    },
+    "expires": {expires},
+}</code>
+      </pre>
+<ul class="parameters">
+<li><strong>name: </strong><span>[String] The name to describe the network alert.</span>
+</li>
+<li><strong>filters: </strong><span>[Object] An object specifying the criteria that an alert should trigger. The only supported option at the moment is the &#34;ip&#34; filter.</span>
+</li>
+<li><strong>filters.ip: </strong><span>[String] A list of IPs or network ranges defined using CIDR notation.</span>
+</li>
+<li><strong>expires (optional): </strong><span>[Integer] Number of seconds that the alert should be active.</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/shodan/alert?key={YOUR_API_KEY}" -H 'Content-Type: application/json' -d'
+    {
+        "name": "DNS Alert",
+        "filters": {
+            "ip": [
+                "8.8.8.8",
+                "1.1.1.1"
+            ]
+        },
+        "expires": 0
+    }
+'</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:44:22.989575",
+    "triggers": {},
+    "has_triggers": false,
+    "expires": 0,
+    "expiration": null,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "id": "OYPRB8IR9Z35AZPR",
+    "size": 2
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert create "DNS Alert" 8.8.8.8 1.1.1.1
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Successfully created network alert!
+Alert ID: Z05WK08N0568Y53R</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.create_alert(name='DNS Alert', ip=['8.8.8.8', '1.1.1.1'], expires=0))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:50:24.277866",
+    "triggers": {},
+    "has_triggers": False,
+    "expires": 0,
+    "expiration": None,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "id": "67UQ4JM3NGJKROR9",
+    "size": 2,
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-info" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/alert/{id}/info</span>
+</h6>
+<div id="shodan-alert-info" class="description">
+<h6><strong>Get the details for a network alert</strong>
+</h6>
+<p>Returns the information about a specific network alert.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/info?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/alert/67UQ4JM3NGJKROR9/info?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:50:24.277000",
+    "triggers": {},
+    "has_triggers": false,
+    "expires": 0,
+    "notify": {},
+    "expiration": null,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "notifiers": [],
+    "id": "67UQ4JM3NGJKROR9",
+    "size": 2
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert info 67UQ4JM3NGJKROR9
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">DNS Alert
+Created: 2021-01-27T03:50:24.277000
+Notifications: disabled
+
+Network Range(s):
+> 8.8.8.8
+> 1.1.1.1</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.alerts(aid='67UQ4JM3NGJKROR9', include_expired=True))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:50:24.277000",
+    "triggers": {},
+    "has_triggers": False,
+    "expires": 0,
+    "notify": {},
+    "expiration": None,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "notifiers": [],
+    "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+    "id": "67UQ4JM3NGJKROR9",
+    "size": 2,
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-delete" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/shodan/alert/{id}</span>
+</h6>
+<div id="shodan-alert-delete" class="description">
+<h6><strong>Delete an alert</strong>
+</h6>
+<p>Remove the specified network alert.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/shodan/alert/67UQ4JM3NGJKROR9?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert remove 67UQ4JM3NGJKROR9
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Alert deleted
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.delete_alert(aid='67UQ4JM3NGJKROR9'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-edit" class="method"><span class="name bg-info">POST</span><span class="url bg-dark">/shodan/alert/{id}</span>
+</h6>
+<div id="shodan-alert-edit" class="description">
+<h6><strong>Edit the networks monitored in an alert</strong>
+</h6>
+<p>Use this method to edit a network alert with a new list of IPs/ networks to keep track of.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<p>The alert is edited by sending a JSON encoded object that has the structure:</p>
+<pre class="prettyprint"><code class="language-json">{
+    "filters": {
+        "ip": {ip},
+    },
+}</code>
+      </pre>
+<ul class="parameters">
+<li><strong>filters: </strong><span>[Object] An object specifying the criteria that an alert should trigger. The only supported option at the moment is the &#34;ip&#34; filter.</span>
+</li>
+<li><strong>filters.ip: </strong><span>[String] A list of IPs or network ranges defined using CIDR notation.</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/shodan/alert/67UQ4JM3NGJKROR9?key={YOUR_API_KEY}" -H 'Content-Type: application/json' -d'
+    {
+        "filters": {
+            "ip": [
+                "8.8.8.8",
+                "1.1.1.1"
+            ]
+        }
+    }
+'</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:44:22.989575",
+    "triggers": {},
+    "has_triggers": false,
+    "expires": 0,
+    "expiration": null,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "id": "67UQ4JM3NGJKROR9",
+    "size": 2
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.edit_alert('67UQ4JM3NGJKROR9', ['8.8.8.8', '1.1.1.1']))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "name": "DNS Alert",
+    "created": "2021-01-27T03:50:24.277866",
+    "triggers": {},
+    "has_triggers": False,
+    "expires": 0,
+    "expiration": None,
+    "filters": {
+        "ip": [
+            "8.8.8.8",
+            "1.1.1.1"
+        ]
+    },
+    "id": "67UQ4JM3NGJKROR9",
+    "size": 2,
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-list" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/alert/info</span>
+</h6>
+<div id="shodan-alert-list" class="description">
+<h6><strong>Get a list of all the created alerts</strong>
+</h6>
+<p>Returns a listing of all the network alerts that are currently active on the account.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/info?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/alert/info?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    {
+        "name": "DNS Alert",
+        "created": "2021-01-27T03:44:22.989000",
+        "triggers": {},
+        "has_triggers": false,
+        "expires": 0,
+        "notify": {},
+        "expiration": null,
+        "filters": {
+            "ip": [
+                "8.8.8.8",
+                "1.1.1.1"
+            ]
+        },
+        "notifiers": [],
+        "id": "OYPRB8IR9Z35AZPR",
+        "size": 2
+    },
+    {
+        "name": "Google DNS Alert",
+        "created": "2021-01-27T03:42:50.908000",
+        "triggers": {},
+        "has_triggers": false,
+        "expires": 0,
+        "notify": {},
+        "expiration": null,
+        "filters": {
+            "ip": [
+                "8.8.8.8"
+            ]
+        },
+        "notifiers": [],
+        "id": "RIO8WNQZMI4ZQXW6",
+        "size": 1
+    },
+    ...
+]</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert list
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup"># Alert ID       Name                  IP/ Network
+OYPRB8IR9Z35AZPR DNS Alert             8.8.8.8, 1.1.1.1
+RIO8WNQZMI4ZQXW6 Google DNS Alert      8.8.8.8</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.alerts(include_expired=True))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    {
+        "name": "DNS Alert",
+        "created": "2021-01-27T03:44:22.989000",
+        "triggers": {},
+        "has_triggers": False,
+        "expires": 0,
+        "notify": {},
+        "expiration": None,
+        "filters": {
+            "ip": [
+                "8.8.8.8",
+                "1.1.1.1"
+            ]
+        },
+        "notifiers": [],
+        "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+        "id": "OYPRB8IR9Z35AZPR",
+        "size": 2,
+    },
+    {
+        "name": "Google DNS Alert",
+        "created": "2021-01-27T03:42:50.908000",
+        "triggers": {},
+        "has_triggers": False,
+        "expires": 0,
+        "notify": {},
+        "expiration": None,
+        "filters": {
+            "ip": [
+                "8.8.8.8"
+            ]
+        },
+        "notifiers": [],
+        "api_key": "toH56DpDulOnvyxLhOSIxaUgZQeg1gFX",
+        "id": "RIO8WNQZMI4ZQXW6",
+        "size": 1,
+    },
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-trigger-list" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/alert/triggers</span>
+</h6>
+<div id="shodan-alert-trigger-list" class="description">
+<h6><strong>Get a list of available triggers</strong>
+</h6>
+<p>Returns a list of all the triggers that can be enabled on network alerts.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/triggers?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/alert/triggers?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    {
+        "name": "any",
+        "rule": "*",
+        "description": "Match any service that is discovered"
+    },
+    {
+        "name": "industrial_control_system",
+        "rule": "tag:ics",
+        "description": "Services associated with industrial control systems"
+    },
+    {
+        "name": "malware",
+        "rule": "tag:compromised,malware",
+        "description": "Compromised or malware-related services"
+    },
+    {
+        "name": "uncommon",
+        "rule": "-port:22,80,443,7547",
+        "description": "Services that generally shouldn't be publicly available"
+    },
+    ...
+]</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert triggers
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">The following triggers can be enabled on alerts:
+
+Name         any
+Description  Match any service that is discovered
+Rule         *
+
+Name         industrial_control_system
+Description  Services associated with industrial control systems
+Rule         tag:ics
+
+Name         internet_scanner
+Description  Device has been seen scanning the Internet and exposes a service
+Rule         tags:scanner
+
+...</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.alert_triggers())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    {
+        "name": "any",
+        "rule": "*",
+        "description": "Match any service that is discovered"
+    },
+    {
+        "name": "industrial_control_system",
+        "rule": "tag:ics",
+        "description": "Services associated with industrial control systems",
+    },
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-enable-trigger" class="method"><span class="name bg-warning">PUT</span><span class="url bg-dark">/shodan/alert/{id}/trigger/{trigger}</span>
+</h6>
+<div id="shodan-alert-enable-trigger" class="description">
+<h6><strong>Enable a trigger</strong>
+</h6>
+<p>Get notifications when the specified trigger is met.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/trigger/{trigger}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>trigger: </strong><span>[String] Comma-separated list of trigger names</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X PUT "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/trigger/new_service,vulnerable?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert enable OYPRB8IR9Z35AZPR new_service,vulnerable
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Successfully enabled the trigger: new_service,vulnerable
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.enable_alert_trigger(aid='OYPRB8IR9Z35AZPR', trigger='new_service,vulnerable'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-disable-trigger" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/shodan/alert/{id}/trigger/{trigger}</span>
+</h6>
+<div id="shodan-alert-disable-trigger" class="description">
+<h6><strong>Disable a trigger</strong>
+</h6>
+<p>Stop getting notifications for the specified trigger.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/trigger/{trigger}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>trigger: </strong><span>[String] Comma-separated list of trigger names</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/trigger/new_service,vulnerable?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan alert disable OYPRB8IR9Z35AZPR new_service,vulnerable
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Successfully disabled the trigger: new_service,vulnerable
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.disable_alert_trigger(aid='OYPRB8IR9Z35AZPR', trigger='new_service,vulnerable'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-ignore-service" class="method"><span class="name bg-warning">PUT</span><span class="url bg-dark">/shodan/alert/{id}/trigger/{trigger}/ignore/{service}</span>
+</h6>
+<div id="shodan-alert-ignore-service" class="description">
+<h6><strong>Add to Whitelist</strong>
+</h6>
+<p>Ignore the specified service when it is matched for the trigger.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/trigger/{trigger}/ignore/{service}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>trigger: </strong><span>[String] Trigger name</span>
+</li>
+<li><strong>service: </strong><span>[String] Service specified in the format &#34;ip:port&#34; (ex. &#34;1.1.1.1:80&#34;</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X PUT "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/trigger/new_service/ignore/1.1.1.1:53?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.ignore_alert_trigger_notification(aid='OYPRB8IR9Z35AZPR', trigger='new_service', ip='1.1.1.1', port=53))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-unignore-service" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/shodan/alert/{id}/trigger/{trigger}/ignore/{service}</span>
+</h6>
+<div id="shodan-alert-unignore-service" class="description">
+<h6><strong>Remove from Whitelist</strong>
+</h6>
+<p>Start getting notifications again for the specified trigger.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/trigger/{trigger}/ignore/{service}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>trigger: </strong><span>[String] Trigger name</span>
+</li>
+<li><strong>service: </strong><span>[String] Service specified in the format &#34;ip:port&#34; (ex. &#34;1.1.1.1:80&#34;</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/trigger/new_service/ignore/1.1.1.1:53?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.unignore_alert_trigger_notification(aid='OYPRB8IR9Z35AZPR', trigger='new_service', ip='1.1.1.1', port=53))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-notifier-add" class="method"><span class="name bg-warning">PUT</span><span class="url bg-dark">/shodan/alert/{id}/notifier/{notifier_id}</span>
+</h6>
+<div id="shodan-alert-notifier-add" class="description">
+<h6><strong>Add the notifier to the alert</strong>
+</h6>
+<p>Add the specified notifier to the network alert. Notifications are only sent if triggers have also been enabled. For each created user, there is a <strong>default</strong> notifier which will sent via email.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/notifier/{notifier_id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>notifier_id: </strong><span>[String] Notifier ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X PUT "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/notifier/default?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.add_alert_notifier(aid='OYPRB8IR9Z35AZPR', nid='default'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-alert-notifier-delete" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/shodan/alert/{id}/notifier/{notifier_id}</span>
+</h6>
+<div id="shodan-alert-notifier-delete" class="description">
+<h6><strong>Remove the notifier from the alert</strong>
+</h6>
+<p>Remove the notification service from the alert. Notifications are only sent if triggers have also been enabled.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/alert/{id}/notifier/{notifier_id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Alert ID</span>
+</li>
+<li><strong>notifier_id: </strong><span>[String] Notifier ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/shodan/alert/OYPRB8IR9Z35AZPR/notifier/default?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.remove_alert_notifier(aid='OYPRB8IR9Z35AZPR', nid='default'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Notifiers</em>
+</h1>
+<div class="request">
+<h6 data-target="#notifiers-list" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/notifier</span>
+</h6>
+<div id="notifiers-list" class="description">
+<h6><strong>List all user-created notifiers</strong>
+</h6>
+<p>Get a list of all the notifiers that the user has created.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/notifier?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "description": null,
+            "args": {
+                "to": "jmath@shodan.io"
+            },
+            "provider": "email",
+            "id": "default"
+        },
+        ...
+    ],
+    "total": 2
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.list_notifiers())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "description": null,
+            "args": {
+                "to": "jmath@shodan.io"
+            },
+            "provider": "email",
+            "id": "default"
+        },
+        ...
+    ],
+    "total": 2
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#notifiers-provider" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/notifier/provider</span>
+</h6>
+<div id="notifiers-provider" class="description">
+<h6><strong>List of available notification providers</strong>
+</h6>
+<p>Get a list of all the notification providers that are available and the parameters to submit when creating them.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier/provider?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/notifier/provider?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "pagerduty": {
+        "required": [
+            "routing_key"
+        ]
+    },
+    "slack": {
+        "required": [
+            "webhook_url"
+        ]
+    },
+    "telegram": {
+        "required": [
+            "chat_id",
+            "token"
+        ]
+    },
+    "webhook": {
+        "required": [
+            "url"
+        ]
+    },
+    "phone": {
+        "required": [
+            "to"
+        ]
+    },
+    "email": {
+        "required": [
+            "to"
+        ]
+    },
+    "gitter": {
+        "required": [
+            "room_id",
+            "token"
+        ]
+    }
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.list_providers())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "pagerduty": {
+        "required": [
+            "routing_key"
+        ]
+    },
+    "slack": {
+        "required": [
+            "webhook_url"
+        ]
+    },
+    "telegram": {
+        "required": [
+            "chat_id",
+            "token"
+        ]
+    },
+    "webhook": {
+        "required": [
+            "url"
+        ]
+    },
+    "phone": {
+        "required": [
+            "to"
+        ]
+    },
+    "email": {
+        "required": [
+            "to"
+        ]
+    },
+    "gitter": {
+        "required": [
+            "room_id",
+            "token"
+        ]
+    }
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#notifiers-create" class="method"><span class="name bg-info">POST</span><span class="url bg-dark">/notifier</span>
+</h6>
+<div id="notifiers-create" class="description">
+<h6><strong>Create a new notification service for the user</strong>
+</h6>
+<p>Use this method to create a new notification service endpoint that Shodan services can send notifications through.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6><span>The parameters depend on the type of notification service that is being created. To get a list of parameters for a provider us the /notifier/provider endpoint. The following parameters always need to be provided:</span>
+<ul class="parameters">
+<li><strong>provider: </strong><span>[String] Provider name as returned by /notifier/provider</span>
+</li>
+<li><strong>description: </strong><span>[String] Description of the notifier</span>
+</li>
+<li><strong>**args: </strong><span>[String] Arguments required by the provider</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X POST "https://api.shodan.io/notifier?key={YOUR_API_KEY}" -d 'provider=email' -d 'description=Email notifier' -d 'to=jmath@shodan.io'
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "id": "1VxiaJb93Gn8TUnM",
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.create(provider='email', args={'to': 'jmath@shodan.io'}, description='Email notifier'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "id": "1VxiaJb93Gn8TUnM",
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#notifiers-delete" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/notifier/{id}</span>
+</h6>
+<div id="notifiers-delete" class="description">
+<h6><strong>Delete a notification service</strong>
+</h6>
+<p>Remove the notification service created for the user.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier/{id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Notifier ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/notifier/1VxiaJb93Gn8TUnM?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.remove(nid='1VxiaJb93Gn8TUnM'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "success": True
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#notifiers-get" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/notifier/{id}</span>
+</h6>
+<div id="notifiers-get" class="description">
+<h6><strong>Get information about a notifier</strong>
+ </h6>
+<p>Use this method to create a new notification service endpoint that Shodan services can send notifications through.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier/{id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Notifier ID</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/notifier/1VxiaJb93Gn8TUnM?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "description": "Email notifier",
+    "args": {
+        "to": "jmath@shodan.io"
+    },
+    "provider": "email",
+    "id": "1VxiaJb93Gn8TUnM"
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.get(nid='1VxiaJb93Gn8TUnM'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "description": "Email notifier",
+    "args": {
+        "to": "jmath@shodan.io"
+    },
+    "provider": "email",
+    "id": "1VxiaJb93Gn8TUnM"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#notifiers-edit" class="method"><span class="name bg-warning">PUT</span><span class="url bg-dark">/notifier/{id}</span>
+</h6>
+<div id="notifiers-edit" class="description">
+<h6><strong>Edit a notifier</strong>
+</h6>
+<p>Use this method to update the parameters of a notifier.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/notifier/{id}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<p>The parameters depend on the type of notification service that is being created. To get a list of parameters for a provider us the /notifier/provider endpoint.</p>
+<ul class="parameters">
+<li><strong>id: </strong><span>[String] Notifier ID</span>
+</li>
+<li><strong>**args: </strong><span>[String] Arguments required by the provider</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X PUT "https://api.shodan.io/notifier/1VxiaJb93Gn8TUnM?key={YOUR_API_KEY}" -d 'to=jmath@gmail.com'
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "id": "1VxiaJb93Gn8TUnM",
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.notifier.edit(nid='1VxiaJb93Gn8TUnM', args={'to': 'jmath@gmail.com'}))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "id": "1VxiaJb93Gn8TUnM",
+    "success": true
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Directory </em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#shodan-query-list" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/query</span>
+</h6>
+<div id="shodan-query-list" class="description">
+<h6><strong>List the saved search queries</strong>
+</h6>
+<p>Use this method to obtain a list of search queries that users have saved in Shodan.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/query?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>page (optional): </strong><span>[Integer] Page number to iterate over results; each page contains 10 items</span>
+</li>
+<li><strong>sort (optional): </strong><span>[String] Sort the list based on a property. Possible values are: votes, timestamp</span>
+</li>
+<li><strong>order (optional): </strong><span>[String] Whether to sort the list in ascending or descending order. Possible values are: asc, desc</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/query?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "votes": 1,
+            "description": "Danieverton",
+            "tags": [
+                ""
+            ],
+            "timestamp": "2021-01-26T19:41:50.961000",
+            "title": "ip camera",
+            "query": "ip camera BR"
+        },
+        {
+            "votes": 3,
+            "description": "This is Moxa Nport Devices ICS system with Authentication disabled Author: A1C3VENOM",
+            "tags": [
+                "ics",
+                "iot",
+                "moxa"
+            ],
+            "timestamp": "2021-01-24T07:44:08.889000",
+            "title": "Moxa Nport Devices with Authentication disabled",
+            "query": "\"Moxa Nport Device\" Status: Authentication disabled port:\"4800\""
+        },
+        ...
+    ],
+    "total": 6746
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.queries(page=1, sort='timestamp', order='desc'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "votes": 1,
+            "description": "Danieverton",
+            "tags": [
+                ""
+            ],
+            "timestamp": "2021-01-26T19:41:50.961000",
+            "title": "ip camera",
+            "query": "ip camera BR",
+        },
+        {
+            "votes": 3,
+            "description": "This is Moxa Nport Devices ICS system with Authentication disabled Author: A1C3VENOM",
+            "tags": [
+                "ics",
+                "iot",
+                "moxa"
+            ],
+            "timestamp": "2021-01-24T07:44:08.889000",
+            "title": "Moxa Nport Devices with Authentication disabled",
+            "query": '"Moxa Nport Device" Status: Authentication disabled port: "4800"',
+        },
+        ...
+    ],
+    "total": 6746,
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-query-search" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/query/search</span>
+</h6>
+<div id="shodan-query-search" class="description">
+<h6><strong>Search the directory of saved search queries.</strong>
+</h6>
+<p>Use this method to search the directory of search queries that users have saved in Shodan.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/query/search?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>query: </strong><span>[String] What to search for in the directory of saved search queries.</span>
+</li>
+<li><strong>page (optional): </strong><span>[Integer] Page number to iterate over results; each page contains 10 items</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/query/search?query=webcam&key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "votes": 2,
+            "description": "",
+            "title": "Webcam",
+            "timestamp": "2019-07-07T02:54:45.194000",
+            "tags": [
+                ""
+            ],
+            "query": "IP Webcam has_screenshot: -port:3269 -port:3288 -port:7000 -port:7001 -port:8000 country:\"KR\""
+        },
+        {
+            "votes": 3,
+            "description": "",
+            "title": "webcam",
+            "timestamp": "2020-10-08T14:54:14.599000",
+            "tags": [
+                ""
+            ],
+            "query": "vinci org:\"Vinci Construction Si Snc\" org:\"Vinci Construction Si Snc\""
+        },
+        ...
+    ],
+    "total": 309
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.queries_search(query='webcam', page=1))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "votes": 2,
+            "description": "",
+            "title": "Webcam",
+            "timestamp": "2019-07-07T02:54:45.194000",
+            "tags": [
+                ""
+            ],
+            "query": "IP Webcam has_screenshot: -port:3269 -port:3288 -port:7000 -port:7001 -port:8000 country:\"KR\""
+        },
+        {
+            "votes": 3,
+            "description": "",
+            "title": "webcam",
+            "timestamp": "2020-10-08T14:54:14.599000",
+            "tags": [
+                ""
+            ],
+            "query": "vinci org:\"Vinci Construction Si Snc\" org:\"Vinci Construction Si Snc\""
+        },
+        ...
+    ],
+    "total": 309
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-query-tags" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/query/tags</span>
+</h6>
+<div id="shodan-query-tags" class="description">
+<h6><strong>List the most popular tags</strong>
+</h6>
+<p>Use this method to obtain a list of popular tags for the saved search queries in Shodan.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/query/tags?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>size (optional): </strong><span>[Integer] The number of tags to return (default: 10).</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/query/tags?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "matches": [
+        {
+            "count": 209,
+            "value": "webcam"
+        },
+        {
+            "count": 172,
+            "value": "cam"
+        },
+        {
+            "count": 159,
+            "value": "camera"
+        },
+        ...
+    ],
+    "total": 7580
+}</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.queries_tags(size=10))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "matches": [
+        {
+            "count": 209,
+            "value": "webcam"
+        },
+        {
+            "count": 172,
+            "value": "cam"
+        },
+        {
+            "count": 159,
+            "value": "camera"
+        },
+        ...
+    ],
+    "total": 7580
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Bulk </em>Data
+&nbsp;<strong class="tag bg-danger">Enterprise</strong>
+</h1>
+<div class="request">
+<h6 data-target="#shodan-data-sets" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/data</span>
+</h6>
+<div id="shodan-data-sets" class="description">
+<h6><strong>Get a list of available datasets</strong>
+</h6>
+<p>Use this method to see a list of the datasets that are available for download.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/data?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/data?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    {
+        "scope": "monthly",
+        "name": "country",
+        "description": "Data broken down by country of the device"
+    },
+    {
+        "scope": "daily",
+        "name": "ships",
+        "description": "AIS data from public receivers"
+    },
+    {
+        "scope": "daily",
+        "name": "ping",
+        "description": "Ping sweeps of the entire IPv4 as well as statistical breakdown of devices by country"
+    },
+    {
+        "scope": "monthly",
+        "name": "dnsdb",
+        "description": "DNS data for active domains on the Internet"
+    },
+    {
+        "scope": "daily",
+        "name": "raw-daily",
+        "description": "Data files containing all the information collected during a day"
+    }
+]</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan data list
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">country        Data broken down by country of the device
+ships          AIS data from public receivers
+ping           Ping sweeps of the entire IPv4 as well as statistical breakdown of devices by country
+dnsdb          DNS data for active domains on the Internet
+raw-daily      Data files containing all the information collected during a day</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.data.list_datasets())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    {
+        "scope": "monthly",
+        "name": "country",
+        "description": "Data broken down by country of the device"
+    },
+    {
+        "scope": "daily",
+        "name": "ships",
+        "description": "AIS data from public receivers"
+    },
+    {
+        "scope": "daily",
+        "name": "ping",
+        "description": "Ping sweeps of the entire IPv4 as well as statistical breakdown of devices by country"
+    },
+    {
+        "scope": "monthly",
+        "name": "dnsdb",
+        "description": "DNS data for active domains on the Internet"
+    },
+    {
+        "scope": "daily",
+        "name": "raw-daily",
+        "description": "Data files containing all the information collected during a day"
+    }
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#shodan-data-files" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/shodan/data/{dataset}</span>
+</h6>
+<div id="shodan-data-files" class="description">
+<h6><strong>List the files for a dataset</strong>
+</h6>
+<p>Get a list of files that are available for download from the provided dataset.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/shodan/data/{dataset}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>dataset: </strong><span>[String] Name of the dataset</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/shodan/data/raw-daily?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">[
+    {
+        "url": "https://...",
+        "timestamp": 1611711401000,
+        "sha1": "5a91f49c90da5ab8856c83c84846941115c55441",
+        "name": "2021-01-26.json.gz",
+        "size": 104650655998
+    },
+    {
+        "url": "https://...",
+        "timestamp": 1611655444000,
+        "sha1": "ea29acc25fc154ac64dde0ab294824ae7f1f64c9",
+        "name": "2021-01-25.json.gz",
+        "size": 152517565458
+    },
+    {
+        "url": "https://...",
+        "timestamp": 1611540775000,
+        "sha1": "aed18f2a952df7731fec447d81ead8a96907000d",
+        "name": "2021-01-24.json.gz",
+        "size": 161275556509
+    },
+    ...
+]</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan data list --dataset raw-daily
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">2021-01-26.json.gz  97.5 GB   5a91f49c90da5ab8856c83c84846941115c55441  https://...
+2021-01-25.json.gz  142.0 GB  ea29acc25fc154ac64dde0ab294824ae7f1f64c9  https://...
+2021-01-24.json.gz  150.2 GB  aed18f2a952df7731fec447d81ead8a96907000d  https://...
+...</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.data.list_files(dataset='raw-daily'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">[
+    {
+        "url": "https://...",
+        "timestamp": 1611711401000,
+        "sha1": "5a91f49c90da5ab8856c83c84846941115c55441",
+        "name": "2021-01-26.json.gz",
+        "size": 104650655998
+    },
+    {
+        "url": "https://...",
+        "timestamp": 1611655444000,
+        "sha1": "ea29acc25fc154ac64dde0ab294824ae7f1f64c9",
+        "name": "2021-01-25.json.gz",
+        "size": 152517565458
+    },
+    {
+        "url": "https://...",
+        "timestamp": 1611540775000,
+        "sha1": "aed18f2a952df7731fec447d81ead8a96907000d",
+        "name": "2021-01-24.json.gz",
+        "size": 161275556509
+    },
+    ...
+]</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1>Manage <em>Organization</em>&nbsp;<strong class="tag bg-danger">Enterprise</strong>
+</h1>
+<div class="request">
+<h6 data-target="#org-info" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/org</span>
+</h6>
+<div id="org-info" class="description">
+<h6><strong>General Information</strong>
+</h6>
+<p>Get information about your organization such as the list of its members, upgrades, authorized domains and more.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/org?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/org?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "name": "Shodan Organization",
+    "created": "2020-09-30T15:41:48.073000",
+    "admins": [
+        {
+            "username": "admin",
+            "email": "admin@shodan.io"
+        }
+    ],
+    "members": [
+        {
+            "username": "member",
+            "email": "member@shodan.io"
+        }
+    ],
+    "upgrade_type": "stream-100",
+    "domains": [
+        "shodan.io"
+    ],
+    "logo": false,
+    "id": "p3cEAmoDapAPeP7w"
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan org info
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Shodan Organization
+Access Level: Enterprise
+Authorized Domains: shodan.io
+
+Administrators:
+> admin                	admin@shodan.io
+
+Members:
+> member               	member@shodan.io</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.org.info())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "name": "Shodan Organization",
+    "created": "2020-09-30T15:41:48.073000",
+    "admins": [
+        {
+            "username": "admin",
+            "email": "admin@shodan.io"
+        }
+    ],
+    "members": [
+        {
+            "username": "member",
+            "email": "member@shodan.io"
+        }
+    ],
+    "upgrade_type": "stream-100",
+    "domains": [
+        "shodan.io"
+    ],
+    "logo": false,
+    "id": "p3cEAmoDapAPeP7w"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#org-add-member" class="method"><span class="name bg-warning">PUT</span><span class="url bg-dark">/org/member/{user}</span>
+</h6>
+<div id="org-add-member" class="description">
+<h6><strong>Add a new member</strong>
+</h6>
+<p>Add a Shodan user to the organization and upgrade them.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/org/member/{user}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>user: </strong><span>[String] Username or email of the Shodan user</span>
+</li>
+<li><strong>notify (optional): </strong><span>[Boolean] Whether or not to send an email notification</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X PUT "https://api.shodan.io/org/member/new-member@shodan.io?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan org add new-member@shodan.io
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Successfully added the new member
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.org.add_member(user='new-member@shodan.io', notify=True))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">True
+</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#org-remove-member" class="method"><span class="name bg-danger">DELETE</span><span class="url bg-dark">/org/member/{user}</span>
+</h6>
+<div id="org-remove-member" class="description">
+<h6><strong>Remove a member</strong>
+</h6>
+<p>Remove and downgrade the provided member from the organization.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/org/member/{user}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>user: </strong><span>[String] Username or email of the Shodan user</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X DELETE "https://api.shodan.io/org/member/new-member@shodan.io?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "success": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan org remove new-member@shodan.io
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Successfully removed the new member
+</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.org.remove_member(user='new-member@shodan.io'))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">True
+</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Account </em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#account-profile" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/account/profile</span>
+</h6>
+<div id="account-profile" class="description">
+<h6><strong>Account Profile</strong>
+</h6>
+<p>Returns information about the Shodan account linked to this API key.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/account/profile?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/account/profile?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "member": true,
+    "credits": 0,
+    "display_name": null,
+    "created": "2020-06-15T10:44:43.148000"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>DNS</em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#dns-domain" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/dns/domain/{domain}</span>
+</h6>
+<div id="dns-domain" class="description">
+<h6><strong>Domain Information</strong>
+</h6>
+<p>Get all the subdomains and other DNS entries for the given domain. Uses 1 query credit per lookup.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/dns/domain/{domain}?key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>domain: </strong><span>[String] Domain name to lookup; example &#34;cnn.com&#34;</span>
+</li>
+<li><strong>history (optional): </strong><span>[Boolean] True if historical DNS data should be included in the results (default: False)</span>
+</li>
+<li><strong>type (optional): </strong><span>[String] DNS type, possible values are: A, AAAA, CNAME, NS, SOA, MX, TXT</span>
+</li>
+<li><strong>page (optional): </strong><span>[Integer] The page number to page through results 100 at a time (default: 1)</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/dns/domain/google.com?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "domain": "google.com",
+    "tags": [
+        "ipv6"
+    ],
+    "data": [
+        {
+            "subdomain": "",
+            "type": "MX",
+            "value": "aspmx.l.google.com",
+            "last_seen": "2021-01-19T22:23:15.978799+00:00"
+        },
+        {
+            "subdomain": "*.auth.corp",
+            "type": "CNAME",
+            "value": "uberproxy.l.google.com",
+            "last_seen": "2021-01-26T13:04:34.018114+00:00"
+        },
+        {
+            "subdomain": "*.cloud.sandbox",
+            "type": "A",
+            "value": "74.125.142.81",
+            "last_seen": "2021-01-15T12:57:18.133727+00:00"
+        },
+        ...
+    ],
+    "subdomains": [
+        "*.auth.corp",
+        "*.cloud.sandbox",
+        "*.composer-staging.cloud",
+        ...
+    ],
+    "more": true
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan domain google.com
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">GOOGLE.COM
+
+                            MX     aspmx.l.google.com
+*.auth.corp              CNAME  uberproxy.l.google.com
+*.cloud.sandbox          A      74.125.142.81
+*.composer-staging.cloud  CNAME  www3.l.google.com
+...</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.dns.domain_info(domain='google.com', history=False, type=None, page=1))</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "domain": "google.com",
+    "tags": [
+        "ipv6"
+    ],
+    "data": [
+        {
+            "subdomain": "",
+            "type": "MX",
+            "value": "aspmx.l.google.com",
+            "last_seen": "2021-01-19T22:23:15.978799+00:00"
+        },
+        {
+            "subdomain": "*.auth.corp",
+            "type": "CNAME",
+            "value": "uberproxy.l.google.com",
+            "last_seen": "2021-01-26T13:04:34.018114+00:00"
+        },
+        {
+            "subdomain": "*.cloud.sandbox",
+            "type": "A",
+            "value": "74.125.142.81",
+            "last_seen": "2021-01-15T12:57:18.133727+00:00"
+        },
+        ...
+    ],
+    "subdomains": [
+        "*.auth.corp",
+        "*.cloud.sandbox",
+        "*.composer-staging.cloud",
+        ...
+    ],
+    "more": true
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#dns-resolve" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/dns/resolve</span>
+</h6>
+<div id="dns-resolve" class="description">
+<h6><strong>DNS Lookup</strong>
+</h6>
+<p>Look up the IP address for the provided list of hostnames.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/dns/resolve?hostnames={hostnames}&key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>hostnames: </strong><span>[String] Comma-separated list of hostnames; example &#34;google.com,bing.com&#34;</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/dns/resolve?hostnames=google.com,facebook.com&key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "google.com": "172.217.6.46",
+    "facebook.com": "157.240.22.35"
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#dns-reverse" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/dns/reverse</span>
+</h6>
+<div id="dns-reverse" class="description">
+<h6><strong>Reverse DNS Lookup</strong>
+</h6>
+<p>Look up the hostnames that have been defined for the given list of IP addresses.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/dns/reverse?ips={ips}&key={YOUR_API_KEY}</code>
+      </pre>
+<h6><strong>Parameters</strong>
+</h6>
+<ul class="parameters">
+<li><strong>ips: </strong><span>[String] Comma-separated list of IP addresses; example &#34;74.125.227.230,204.79.197.200&#34;</span>
+</li>
+</ul>
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/dns/reverse?ips=8.8.8.8,1.1.1.1&key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "8.8.8.8": [
+        "dns.google"
+    ],
+    "1.1.1.1": [
+        "one.one.one.one"
+    ]
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Utility </em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#tools-httpheaders" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/tools/httpheaders</span>
+</h6>
+<div id="tools-httpheaders" class="description">
+<h6><strong>HTTP Headers</strong>
+</h6>
+<p>Shows the HTTP headers that your client sends when connecting to a webserver.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/tools/httpheaders?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/tools/httpheaders?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "Content-Length": "",
+    "Cf-Visitor": "{\"scheme\":\"https\"}",
+    "Accept-Encoding": "gzip",
+    "X-Forwarded-For": "113.161.57.41",
+    "Host": "api.shodan.io",
+    "Cf-Request-Id": "07e880ae180000d1cfb309a000000001",
+    "User-Agent": "curl/7.64.1",
+    "Connection": "Keep-Alive",
+    "X-Forwarded-Proto": "https",
+    "Accept": "*/*",
+    "Cdn-Loop": "cloudflare",
+    "Cf-Connecting-Ip": "113.161.57.41",
+    "Cf-Ray": "61876a29cdf8d1cf-DFW",
+    "Content-Type": ""
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+<div class="request">
+<h6 data-target="#tools-myip" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/tools/myip</span>
+</h6>
+<div id="tools-myip" class="description">
+<h6><strong>My IP Address</strong>
+</h6>
+<p>Get your current IP address as seen from the Internet.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/tools/myip?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/tools/myip?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">"113.161.57.41"
+</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>API Status </em>Methods
+</h1>
+<div class="request">
+<h6 data-target="#api-info" class="method"><span class="name bg-success">GET</span><span class="url bg-dark">/api-info</span>
+</h6>
+<div id="api-info" class="description">
+<h6><strong>API Plan Information</strong>
+</h6>
+<p>Returns information about the API plan belonging to the given API key.</p>
+<h6><strong>Request URL</strong>
+</h6>
+<pre class="prettyprint"><code class="language-http">https://api.shodan.io/api-info?key={YOUR_API_KEY}</code>
+      </pre><br />
+<div class="examples">
+<div class="languages"><strong>Examples</strong>
+<select class="u-pull-right">
+<option value="curl" selected="selected">cURL</option>
+<option value="shodan-cli">Shodan CLI</option>
+<option value="python">Python</option>
+</select>
+</div>
+<div id="curl-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ curl -X GET "https://api.shodan.io/api-info?key={YOUR_API_KEY}"
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-json">{
+    "scan_credits": 100000,
+    "usage_limits": {
+        "scan_credits": -1,
+        "query_credits": -1,
+        "monitored_ips": -1
+    },
+    "plan": "stream-100",
+    "https": false,
+    "unlocked": true,
+    "query_credits": 100000,
+    "monitored_ips": 19,
+    "unlocked_left": 100000,
+    "telnet": false
+}</code>
+          </pre>
+</div>
+<div id="shodan-cli-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-bash">$ shodan info
+</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-markup">Query credits available: 100000
+Scan credits available: 100000</code>
+          </pre>
+</div>
+<div id="python-example" class="code">
+<div class="type bg-secondary"><span>Request</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">from shodan import Shodan
+
+api = Shodan('{YOUR_API_KEY}')
+print(api.info())</code>
+          </pre>
+<div class="type bg-secondary"><span>Response</span><span class="u-pull-right copy-button"><i class="fal fa-copy  fa-fw "></i></span>
+</div>
+<pre class="prettyprint"><code class="language-python">{
+    "scan_credits": 100000,
+    "usage_limits": {
+        "scan_credits": -1,
+        "query_credits": -1,
+        "monitored_ips": -1
+    },
+    "plan": "stream-100",
+    "https": False,
+    "unlocked": True,
+    "query_credits": 100000,
+    "monitored_ips": 19,
+    "unlocked_left": 100000,
+    "telnet": False,
+}</code>
+          </pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="card card-padding">
+<h1><em>Error </em>Handling
+</h1>
+<p>A non-200 status code in the response indicates an error occurred. Along with a non-200 error code, the error response will also include a message containing the reason for the failure.</p>
+<h6><strong>Sample Response</strong>
+</h6>
+<pre class="prettyprint"><code class="language-json">{
+    "error": "Invalid IP"
+}</code>
+  </pre>
+</div><a href="https://developer.shodan.io/api/stream" class="button">Next: Streaming API Documentation</a>
+</div>
+</div>
+</div>
+</main>
+</div>
+<br />
+<div class="container u-full-width bg-solid"><br /><br />
+<div class="container">
+<div class="row">
+<div class="three columns">
+<h6 class="grid-heading">Products</h6>
+<ul>
+<li><a href="https://monitor.shodan.io" class="light">Monitor</a>
+</li>
+<li><a href="https://beta.shodan.io" class="light">Search Engine</a>
+</li>
+<li><a href="https://developer.shodan.io" class="light">Developer API</a>
+</li>
+<li><a href="https://maps.shodan.io" class="light">Maps</a>
+</li>
+</ul>
+</div>
+<div class="three columns">
+<h6 style="visibility:hidden" class="grid-heading">&nbsp;</h6>
+<ul>
+<li><a href="https://enterprise.shodan.io" class="light">Bulk Data</a>
+</li>
+<li><a href="https://images.shodan.io" class="light">Images</a>
+</li>
+ <li><a href="https://snippets.shodan.io" class="light">Snippets</a>
+</li>
+</ul>
+</div>
+<div class="three columns">
+<h6 class="grid-heading">Pricing</h6>
+<ul>
+<li><a href="https://www.shodan.io/store/member" class="light">Membership</a>
+</li>
+<li><a href="https://developer.shodan.io/pricing" class="light">API Subscriptions</a>
+</li>
+<li><a href="https://enterprise.shodan.io" class="light">Enterprise</a>
+</li>
+</ul>
+</div>
+<div class="three columns">
+<h6 class="grid-heading">Contact Us</h6>
+<ul>
+<li><a href="mailto:support@shodan.io" class="light">support@shodan.io</a>
+</li>
+<li>
+<h5><a href="https://twitter.com/shodanhq" class="f-lightgrey"><i class="fab fa-twitter   "></i></a>&nbsp;&nbsp;<a href="https://www.linkedin.com/company/shodan/" class="f-lightgrey"><i class="fab fa-linkedin   "></i></a>&nbsp;&nbsp;<a href="https://www.facebook.com/shodan.io" class="f-lightgrey"><i class="fab fa-facebook   "></i></a>
+</h5>
+</li>
+</ul>
+<p class="light">Shodan &reg; - All rights reserved</p>
+</div>
+</div>
+</div>
+</div>
+<script>(function() {
+    let quickApiKey = document.getElementById('api-key-show')
+    if (quickApiKey) {
+        quickApiKey.addEventListener('click', function(e) {
+            quickApiKey.style.display = 'none';
+            document.getElementById('api-key-content').style.display = 'block';
+        })
+    }
+})()
+    </script>
+<script>(function() {
+    let $menuBtn = document.getElementById('menu-btn')
+    document.body.addEventListener('click', function(e) {
+        // Only check when the menu is open
+        if (!$menuBtn.checked) {
+            return
+        }
+
+        let elm = e.target
+        let showMenu = false
+        while (elm) {
+            // Ignore duplicated event
+            if (elm.classList.contains('menu-icon')) {
+                return
+            }
+
+            // Toggle menu when clicking on the menu icon
+            if (elm.id == 'menu-btn') {
+                showMenu = true
+                break
+            }
+            elm = elm.parentElement
+        }
+
+        $menuBtn.checked = showMenu
+    })
+})()
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/prism.min.js" defer="defer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/plugins/autoloader/prism-autoloader.min.js" defer="defer"></script>
+<script>//- Hide/ show API document example blocks
+function ready(fn) {
+    if (document.readyState != 'loading'){
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+ready(function () {
+    function hideExample(example, displayId) {
+        //- Hide/ show code blocks for each examples
+        let codes = example.querySelectorAll('div.code');
+        for (let i = 0; i < codes.length; i++) {
+            if (codes[i].id !== displayId) {
+                codes[i].style.display = 'none';
+            } else {
+                codes[i].style.display = 'block';
+            }
+        }
+    }
+
+    //- Get all example blocks
+    let examples = document.querySelectorAll('.examples');
+    for (let i = 0; i < examples.length; i++) {
+        let example = examples[i];
+        let language = example.querySelector('.languages');
+        if (language) {
+            let selectEl = language.querySelector('select');
+            let displayId = selectEl.value + '-example';
+
+            //- Hide not selected example blocks
+            hideExample(example, displayId);
+
+            //- When user change language
+            example.addEventListener('change', function(event) {
+                let displayId = event.target.value + '-example';
+                hideExample(example, displayId);
+            });
+        }
+
+        //- Get all copy buttons
+        let copyButtons = example.querySelectorAll('.copy-button');
+        for (let i = 0; i < copyButtons.length; i++) {
+            let copyButton = copyButtons[i];
+
+            //- Add tooltip
+            copyButton.addEventListener('mouseenter', function() {
+                let copyTooltip = document.createElement('div');
+                copyTooltip.setAttribute('class', 'copy-tooltip bg-dark');
+                copyTooltip.innerHTML = '<div class="arrow"></div><div class="content">Click to copy</div>';
+                copyButton.appendChild(copyTooltip);
+            });
+
+            //- Remove tooltip
+            copyButton.addEventListener('mouseleave', function() {
+                copyButton.querySelector('.copy-tooltip').remove();
+            });
+
+            //- Copy example code
+            copyButton.addEventListener('click', function() {
+                let exampleCode = copyButton.parentElement.nextElementSibling;
+
+                //- Create temporary textArea as document.execCommand only work on textarea, input
+                let textArea = document.createElement('textarea');
+                let exampleText = exampleCode.innerText.trim();
+                //- We added $ at the beginning for Bash language, so try to remove it first
+                exampleText = exampleText.replace(/^\$ /, "");
+
+                //- Set text and focus
+                textArea.value = exampleText;
+                document.body.appendChild(textArea);
+                textArea.select();
+
+                //- Copy to clipboard
+                try {
+                    document.execCommand('copy');
+                    //- Change tooltip content
+                    copyButton.querySelector('.content').innerHTML = '<strong>Copied</strong>';
+                } catch (err) {
+                    console.log('Oops, unable to copy', err);
+                }
+
+                //- Remove temporary textArea
+                document.body.removeChild(textArea);
+            });
+        }
+    }
+
+    //- Hide/ show API request blocks
+    //- Get all .method bars that contain description target
+    let methods = document.querySelectorAll('.method[data-target]');
+    for (let i = 0; i < methods.length; i++) {
+        //- Get target Id and remove # character at first
+        let targetId = methods[i].getAttribute('data-target').replace(/^#/, '');
+        let description = document.getElementById(targetId);
+
+        if (description) {
+            //- Hide all description sections on first load
+            description.style.display = 'none';
+
+            //- Handle click event
+            methods[i].addEventListener('click', function(event) {
+                //- Hide/ show the description
+                if (description.style.display === 'block') {
+                    description.style.display = 'none';
+                } else {
+                    description.style.display = 'block';
+                }
+            });
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -2,9 +2,9 @@
 Due April 1st at 11:59PM
 
 ## Development Work [10 points; ~2/3 point per todo]
-- Complete the 4 TODOs in [main.go](course-materials/materials/lab/6/main/main.go)
-- Complete the 1 TODO in [scrape/scrape.go](course-materials/materials/lab/6/scrape/scrape.go)
-- Complete the 10 TODOs in [scrape/scrapeapi.go](course-materials/materials/lab/6/scrape/scrapeapi.go)
+- Complete the 4 TODOs in [main.go](course-materials/materials/lab/6/main/main.go) ***
+- Complete the 1 TODO in [scrape/scrape.go](course-materials/materials/lab/6/scrape/scrape.go) * 
+- Complete the 10 TODOs in [scrape/scrapeapi.go](course-materials/materials/lab/6/scrape/scrapeapi.go)*
 
 
 ## Capture Submission details
@@ -26,3 +26,7 @@ Due April 1st at 11:59PM
 1. ZIP FILE with all 6 Files [10 points]
 2. Link to your Github Repository [10 points]
 3. List of Collaborators
+
+## Dear Mike,
+
+I coded in some fun for when a search fails, please give it a couple tries 

@@ -13,6 +13,7 @@ while read_bytes := encoded_pic.read(8):
         message = message + b_char 
     except:
         message = message
+print(message)
 reg = "".join(re.findall(r"!!![a-z \n]*!*",message))
 reg = reg.replace("!!!","")
 reg = reg.replace("\\n","\n")

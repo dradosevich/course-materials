@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"hscan/hscan"
 )
 
@@ -18,11 +19,21 @@ func main() {
 	// Download and use bigger password file from: https://weakpass.com/wordlist/tiny  (want to push yourself try /small ; to easy? /big )
 
 	//TODO Grab the file to use from the command line instead; look at previous lab (e.g., #3 ) for examples of grabbing info from command line
-	var file = "wordlist.txt"
+	var file = "rockyou-75.txt"
 
 	hscan.GuessSingle(md5hash, file)
 	hscan.GuessSingle(sha256hash, file)
-	hscan.GenHashMaps(file)
-	hscan.GetSHA(sha256hash)
-	hscan.GetMD5(sha256hash)
+	hscan.GenHashMapsImproved(file)
+	pass, err := hscan.GetSHA(drmike2)
+	if err != nil {
+		fmt.Println("error single guessing sha, couldn't find password")
+	} else {
+		fmt.Printf("Found Dr. Mike's sha password: %s", pass)
+	}
+	pass, err = hscan.GetMD5(drmike1)
+	if err != nil {
+		fmt.Println("error single guessing md5, couldn't find password")
+	} else {
+		fmt.Printf("Found Dr. Mike's md5 password: %s", pass)
+	}
 }

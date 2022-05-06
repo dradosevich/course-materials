@@ -31,15 +31,18 @@ func GuessSingle(sourceHash string, filename string) {
 		// TODO - From the length of the hash you should know which one of these to check ...
 		// add a check and logicial structure
 
-		hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
-		if hash == sourceHash {
-			fmt.Printf("[+] Password found (MD5): %s\n", password)
+		if len(sourceHash) == 32 {
+			hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+			if hash == sourceHash {
+				fmt.Printf("[+] Password found (MD5): %s\n", password)
+			}
+		} else {
+			hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+			if hash == sourceHash {
+				fmt.Printf("[+] Password found (SHA-256): %s\n", password)
+			}
 		}
 
-		hash = fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
-		if hash == sourceHash {
-			fmt.Printf("[+] Password found (SHA-256): %s\n", password)
-		}
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -48,6 +51,23 @@ func GuessSingle(sourceHash string, filename string) {
 }
 
 func GenHashMaps(filename string) {
+	shalookup := make(map[string]string)
+	md5lookup := make(map[string]string)
+	passwords_file, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer passwords_file.Close()
+	scanner := bufio.NewScanner(passwords_file)
+	for scanner.Scan() {
+		password := scanner.Text()
+
+		sha_hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+		shalookup[sha_hash] = password
+		md5_hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+		md5lookup[md5_hash] = password
+
+	}
 
 	//TODO
 	//itterate through a file (look in the guessSingle function above)
@@ -59,6 +79,40 @@ func GenHashMaps(filename string) {
 	//Test and record the time it takes to scan to generate these Maps
 	// 1. With and without using go subroutines
 	// 2. Compute the time per password (hint the number of passwords for each file is listed on the site...)
+}
+func addMd5(filename string) {
+	md5lookup := make(map[string]string)
+	passwords_file, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer passwords_file.Close()
+	scanner := bufio.NewScanner(passwords_file)
+	for scanner.Scan() {
+		password := scanner.Text()
+		md5_hash := fmt.Sprintf("%x", md5.Sum([]byte(password)))
+		md5lookup[md5_hash] = password
+	}
+}
+func addSha(filename string) {
+	shalookup := make(map[string]string)
+	passwords_file, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer passwords_file.Close()
+	scanner := bufio.NewScanner(passwords_file)
+	for scanner.Scan() {
+		password := scanner.Text()
+		sha_hash := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+		shalookup[sha_hash] = password
+	}
+}
+func GenHashMapsImproved(filename string) {
+
+	go addMd5(filename)
+	go addSha(filename)
+
 }
 
 func GetSHA(hash string) (string, error) {
@@ -75,5 +129,9 @@ func GetSHA(hash string) (string, error) {
 
 //TODO
 func GetMD5(hash string) (string, error) {
-	return "", errors.New("not implemented")
+	password, ok := md5lookup[hash]
+	if ok {
+		return password, nil
+	}
+	return "", errors.New("md5 for password not found")
 }

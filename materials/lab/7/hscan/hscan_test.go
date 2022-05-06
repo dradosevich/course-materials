@@ -14,3 +14,12 @@ func TestGuessSingle(t *testing.T) {
 	}
 
 }
+func TestAddSha(t *testing.T) {
+	GenHashMapsImproved("../main/rockyou-75.txt")
+	shawant := "1DF1854015E31CA286D015345EAFF29A6C6073F70984A3A746823D4CAC16B075"
+	pass := "zxcvbnm"
+	pass, err := GetMD5(shawant)
+	if pass != "zxcvbnm" {
+		t.Errorf("Wrong password received, got %d wanted %d", pass, "zxcvbnm")
+	}
+}

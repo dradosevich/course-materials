@@ -1,0 +1,15 @@
+unimproved gen:
+error single guessing sha, couldn't find password
+error single guessing md5, couldn't find password
+
+real    0m0.205s
+user    0m0.150s
+sys     0m0.070s
+
+improved gen: 
+error single guessing sha, couldn't find password
+error single guessing md5, couldn't find password
+
+real    0m0.075s
+user    0m0.067s
+sys     0m0.010s

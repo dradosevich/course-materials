@@ -13,7 +13,7 @@
   - create new endpoints (minimum create, get, delete)
   - update main.go 
 
-## Option 2
+## Option 2 
 - Modify/Harden the existing wyoassign.go endpoints
 - Current endpoints lack real testing
 - The POST / Create Assignment endpoint is terrible

@@ -28,12 +28,12 @@ func main() {
 	if err != nil {
 		fmt.Println("error single guessing sha, couldn't find password")
 	} else {
-		fmt.Printf("Found Dr. Mike's sha password: %s", pass)
+		fmt.Printf("Found Dr. Mike's sha password: %s\n", pass)
 	}
 	pass, err = hscan.GetMD5(drmike1)
 	if err != nil {
 		fmt.Println("error single guessing md5, couldn't find password")
 	} else {
-		fmt.Printf("Found Dr. Mike's md5 password: %s", pass)
+		fmt.Printf("Found Dr. Mike's md5 password: %s\n", pass)
 	}
 }
